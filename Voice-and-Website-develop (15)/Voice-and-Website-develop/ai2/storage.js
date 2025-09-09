@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   /* ─── Cloudflare‑only setup (no VPS) ───────────────────────────── */
   const USE_LOCAL_FALLBACK = false;              // set true only for offline dev
   /* visitor‑counter cache */
@@ -12,16 +12,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const defaultModelPreference = localStorage.getItem("defaultModelPreference") || "unity";
 
   let envToken = "";
-  try {
-    const res = await fetch(".env");
-    if (res.ok) {
-      const text = await res.text();
-      const match = text.match(/^POLLINATIONS_API_TOKEN\s*=\s*(.+)$/m);
-      if (match) envToken = match[1].trim();
+  (async () => {
+    try {
+      const res = await fetch(".env");
+      if (res.ok) {
+        const text = await res.text();
+        const match = text.match(/^POLLINATIONS_API_TOKEN\s*=\s*(.+)$/m);
+        if (match) envToken = match[1].trim();
+      }
+    } catch (e) {
+      console.warn("Unable to load .env token", e);
     }
-  } catch (e) {
-    console.warn("Unable to load .env token", e);
-  }
+    document.dispatchEvent(new Event("envTokenLoaded"));
+  })();
 
   if (!localStorage.getItem("currentSessionId")) {
     const newSession = createSession("New Chat");
