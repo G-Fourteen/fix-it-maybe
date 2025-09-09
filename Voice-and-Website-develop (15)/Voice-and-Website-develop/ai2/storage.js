@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const defaultModelPreference = localStorage.getItem("defaultModelPreference") || "";
 
   let envToken = "";
+  let storedToken = localStorage.getItem("pollinations_token") || "";
   (async () => {
     try {
       const res = await fetch(".env");
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     getDefaultModel,
     setDefaultModel,
     getToken,
+    setToken,
     clearAllSessions,
     getMemories,
     addMemory,
@@ -70,7 +72,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getToken() {
-    return envToken;
+    return storedToken || envToken;
+  }
+
+  function setToken(token) {
+    storedToken = token || "";
+    if (token) {
+      localStorage.setItem("pollinations_token", token);
+    } else {
+      localStorage.removeItem("pollinations_token");
+    }
   }
 
   function createSession(name) {

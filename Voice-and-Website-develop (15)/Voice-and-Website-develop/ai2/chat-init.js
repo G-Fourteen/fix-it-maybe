@@ -533,7 +533,12 @@ document.addEventListener("DOMContentLoaded", () => {
             cache: "no-store",
         })
             .then(res => {
-                if (!res.ok) throw new Error(`Pollinations error: ${res.status}`);
+                if (!res.ok) {
+                    if (res.status === 402) {
+                        throw new Error("Pollinations token required or tier too low for this model.");
+                    }
+                    throw new Error(`Pollinations error: ${res.status}`);
+                }
                 return res.json();
             })
             .then(data => {
@@ -589,7 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
             .catch(err => {
-                loadingDiv.textContent = "Error: Failed to get a response. Please try again.";
+                loadingDiv.textContent = err.message || "Error: Failed to get a response. Please try again.";
                 setTimeout(() => loadingDiv.remove(), 3000);
                 console.error("Error sending to Pollinations:", err);
                 if (callback) callback();
