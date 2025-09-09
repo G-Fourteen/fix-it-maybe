@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const sessionListEl = document.getElementById("session-list");
   let sessions = loadSessions();
-  const defaultModelPreference = localStorage.getItem("defaultModelPreference") || "unity";
+  const defaultModelPreference = localStorage.getItem("defaultModelPreference") || "";
 
   let envToken = "";
   (async () => {
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getDefaultModel() {
-    return localStorage.getItem("defaultModelPreference") || "unity";
+    return localStorage.getItem("defaultModelPreference") || "";
   }
 
   function setDefaultModel(modelName) {
