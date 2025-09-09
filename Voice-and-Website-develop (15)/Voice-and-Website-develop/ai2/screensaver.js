@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
         const seed = generateSeed();
         const textModelSelect = document.getElementById("model-select");
-        const selectedModel = textModelSelect?.value || window.Storage?.getCurrentSession?.().model || textModelSelect?.options?.[0]?.value;
+        const selectedModel = textModelSelect?.value || (window.Storage?.getCurrentSession?.().model) || "unity";
 
         const body = { messages, model: selectedModel, nonce: Date.now().toString() + Math.random().toString(36).substring(2) };
         let apiUrl = `https://text.pollinations.ai/openai?seed=${seed}`;
@@ -158,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
                 const headers = { "Content-Type": "application/json", Accept: "application/json" };
-                if (token) headers["Authorization"] = `Bearer ${token}`;
                 const response = await fetch(apiUrl, {
                     method: "POST",
                     headers,
