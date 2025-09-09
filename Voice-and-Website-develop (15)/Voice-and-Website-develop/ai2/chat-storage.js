@@ -550,7 +550,7 @@ document.addEventListener("DOMContentLoaded", () => {
             lastUserMsg.includes("picture") || 
             imagePatterns.some(p => p.pattern.test(lastUserMsg))
         );
-        const selectedModel = modelSelect.value || currentSession.model || modelSelect.options[0]?.value;
+        const selectedModel = modelSelect.value || currentSession.model || "unity";
         const nonce = Date.now().toString() + Math.random().toString(36).substring(2);
         const body = { messages, model: selectedModel, nonce };
         let apiUrl = `https://text.pollinations.ai/openai`;
@@ -558,7 +558,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (token) apiUrl += `?token=${encodeURIComponent(token)}`;
         console.log("Sending API request with payload:", JSON.stringify(body));
         const headers = { "Content-Type": "application/json", Accept: "application/json" };
-        if (token) headers["Authorization"] = `Bearer ${token}`;
         fetch(apiUrl, {
             method: "POST",
             headers,
@@ -566,12 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cache: "no-store",
         })
             .then(res => {
-                if (!res.ok) {
-                    if (res.status === 402) {
-                        throw new Error("Pollinations token required or tier too low for this model.");
-                    }
-                    throw new Error(`Pollinations error: ${res.status}`);
-                }
+                if (!res.ok) throw new Error(`Pollinations error: ${res.status}`);
                 return res.json();
             })
             .then(data => {
@@ -627,7 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
             .catch(err => {
-                loadingDiv.textContent = err.message || "Error: Failed to get a response. Please try again.";
+                loadingDiv.textContent = "Error: Failed to get a response. Please try again.";
                 setTimeout(() => loadingDiv.remove(), 3000);
                 console.error("Error sending to Pollinations:", err);
             });
