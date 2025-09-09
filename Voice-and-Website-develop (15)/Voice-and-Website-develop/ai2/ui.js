@@ -214,7 +214,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
     }
-    fetchPollinationsModels();
+    const initModelFetch = () => fetchPollinationsModels();
+    if (Storage.getToken()) {
+        initModelFetch();
+    } else {
+        document.addEventListener("envTokenLoaded", initModelFetch, { once: true });
+    }
 
     newSessionBtn.addEventListener("click", () => {
         const newSess = Storage.createSession("New Chat");
