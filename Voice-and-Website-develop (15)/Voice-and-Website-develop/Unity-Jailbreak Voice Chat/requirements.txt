@@ -1,0 +1,9 @@
+aiohttp
+pyttsx3
+SpeechRecognition
+pyaudio
+python-dotenv
+ttkbootstrap
+requests
+Pillow
+gtts
